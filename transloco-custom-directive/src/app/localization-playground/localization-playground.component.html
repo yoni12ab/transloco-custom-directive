@@ -1,0 +1,66 @@
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Language</mat-label>
+    <mat-select value="en" (selectionChange)="languageChange($event)">
+      <mat-option value="en">en</mat-option>
+      <mat-option value="es">es</mat-option>
+      <mat-option value="ja">ja</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Method</mat-label>
+    <mat-select [(ngModel)]="methodToUse">
+      <mat-option [value]="TranslationMethods.TRANSLOCO_DIRECTIVE">{{
+        TranslationMethods.TRANSLOCO_DIRECTIVE
+      }}</mat-option>
+
+
+      <mat-option [value]="TranslationMethods.TRANSLOCO_PIPE">{{ TranslationMethods.TRANSLOCO_PIPE }}</mat-option>
+
+      <mat-option [value]="TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE">{{
+        TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE
+      }}</mat-option>
+
+      <mat-option [value]="TranslationMethods.MGMT_WRAPPER_DIRECTIVE">{{
+        TranslationMethods.MGMT_WRAPPER_DIRECTIVE
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Rows</mat-label>
+    <input matInput type="text" [(ngModel)]="numberOfRows" (change)="initRowsAndColumns()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Cells</mat-label>
+    <input matInput type="text" [(ngModel)]="numberOfCells" (change)="initRowsAndColumns()" />
+  </mat-form-field>
+</div>
+
+<ng-container *transloco="let t">
+  <table>
+    <tr *ngFor="let tr of rows; let rowIndex = index">
+      <td *ngFor="let tr of cells; let cellIndex = index">
+        <ng-container [ngSwitch]="methodToUse">
+          <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_DIRECTIVE">
+            {{ t('threat', { number: cellIndex * rowIndex }) }}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_PIPE">
+            <span>{{ 'threat' | transloco: { number: cellIndex * rowIndex } }}</span>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE">
+            <span transloco="threat" [translocoParams]="{ number: cellIndex * rowIndex }"></span>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="TranslationMethods.MGMT_WRAPPER_DIRECTIVE">
+            <span [translateDirective]="{ key: 'threat', params: { number: cellIndex * rowIndex } }"></span>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </table>
+</ng-container>
