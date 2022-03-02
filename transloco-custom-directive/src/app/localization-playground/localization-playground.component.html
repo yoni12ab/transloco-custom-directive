@@ -75,7 +75,10 @@
           <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_DIRECTIVE">
             {{
               t("threat", {
-                number: translateFormValues.multiplier * cellIndex * rowIndex
+                number:
+                  translateFormValues.multiplier *
+                  (cellIndex + 1) *
+                  (rowIndex + 1)
               })
             }}
           </ng-container>
@@ -86,7 +89,9 @@
                 | transloco
                   : {
                       number:
-                        translateFormValues.multiplier * cellIndex * rowIndex
+                        translateFormValues.multiplier *
+                        (cellIndex + 1) *
+                        (rowIndex + 1)
                     }
             }}</span>
           </ng-container>
@@ -97,7 +102,10 @@
             <span
               transloco="threat"
               [translocoParams]="{
-                number: translateFormValues.multiplier * cellIndex * rowIndex
+                number:
+                  translateFormValues.multiplier *
+                  (cellIndex + 1) *
+                  (rowIndex + 1)
               }"
             ></span>
           </ng-container>
@@ -109,7 +117,10 @@
               [translateDirective]="{
                 key: 'threat',
                 params: {
-                  number: translateFormValues.multiplier * cellIndex * rowIndex
+                  number:
+                    translateFormValues.multiplier *
+                    (cellIndex + 1) *
+                    (rowIndex + 1)
                 }
               }"
             ></span>

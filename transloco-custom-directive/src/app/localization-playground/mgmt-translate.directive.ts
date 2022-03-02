@@ -1,6 +1,4 @@
 import {
-  AfterViewChecked,
-  ChangeDetectorRef,
   Directive,
   DoCheck,
   ElementRef,
@@ -8,26 +6,23 @@ import {
   OnChanges,
   Renderer2,
   SimpleChanges,
-  TemplateRef,
-  Type,
-  ViewContainerRef,
 } from '@angular/core';
-import { TranslocoDirective, TranslocoService } from '@ngneat/transloco';
-import { HashMap } from '@ngneat/transloco/lib/types';
+import { TranslocoService } from '@ngneat/transloco';
 
 @Directive({
   selector: '[translateDirective]',
 })
 export class MgmtTranslateDirective implements OnChanges, DoCheck {
-  @Input('translateDirective') translateDirective: { key: string; params?: { [key: string]: any } } | undefined ;
-  private hasView = false;
+  @Input('translateDirective') translateDirective:
+    | { key: string; params?: { [key: string]: any } }
+    | undefined;
   private activeLang: string = '';
+  private lastTranslatedText = '';
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
-    private translocoService: TranslocoService,
-  ) {
-  }
+    private translocoService: TranslocoService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.['translateDirective']?.currentValue) {
@@ -35,14 +30,25 @@ export class MgmtTranslateDirective implements OnChanges, DoCheck {
     }
   }
 
-  private initView(input: { key: string; params?: { [p: string]: any } } | undefined) {
-    if(input) {
+  private initView(
+    input: { key: string; params?: { [p: string]: any } } | undefined
+  ) {
+    if (input) {
       this.activeLang = this.translocoService?.getActiveLang();
-      this.renderer.setProperty(
+      const translatedText = this.translocoService.translate(
+        input.key,
+        input.params,
+        this.activeLang
+      );
+
+      if (this.lastTranslatedText !== translatedText) {
+        this.lastTranslatedText = translatedText;
+        this.renderer.setProperty(
           this.el.nativeElement,
           'innerText',
-          this.translocoService.translate(input.key, input.params, this.activeLang)
-      );
+          translatedText
+        );
+      }
     }
   }
 
