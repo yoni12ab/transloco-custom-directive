@@ -1,7 +1,11 @@
-<div>
+<form #translateForm="ngForm">
   <mat-form-field appearance="fill">
     <mat-label>Language</mat-label>
-    <mat-select value="en" (selectionChange)="languageChange($event)">
+    <mat-select
+      [(ngModel)]="translateFormValues.lang"
+      name="lang"
+      (selectionChange)="languageChange($event.value)"
+    >
       <mat-option value="en">en</mat-option>
       <mat-option value="es">es</mat-option>
       <mat-option value="ja">ja</mat-option>
@@ -10,13 +14,17 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Method</mat-label>
-    <mat-select [(ngModel)]="methodToUse">
+    <mat-select
+      [(ngModel)]="translateFormValues.methodToUse"
+      name="methodToUse"
+    >
       <mat-option [value]="TranslationMethods.TRANSLOCO_DIRECTIVE">{{
         TranslationMethods.TRANSLOCO_DIRECTIVE
       }}</mat-option>
 
-
-      <mat-option [value]="TranslationMethods.TRANSLOCO_PIPE">{{ TranslationMethods.TRANSLOCO_PIPE }}</mat-option>
+      <mat-option [value]="TranslationMethods.TRANSLOCO_PIPE">{{
+        TranslationMethods.TRANSLOCO_PIPE
+      }}</mat-option>
 
       <mat-option [value]="TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE">{{
         TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE
@@ -30,34 +38,81 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Rows</mat-label>
-    <input matInput type="text" [(ngModel)]="numberOfRows" (change)="initRowsAndColumns()" />
+    <input
+      matInput
+      type="text"
+      [(ngModel)]="translateFormValues.numberOfRows"
+      name="numberOfRows"
+    />
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Cells</mat-label>
-    <input matInput type="text" [(ngModel)]="numberOfCells" (change)="initRowsAndColumns()" />
+    <input
+      matInput
+      type="text"
+      [(ngModel)]="translateFormValues.numberOfCells"
+      name="numberOfCells"
+    />
   </mat-form-field>
-</div>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Multiplier</mat-label>
+    <input
+      matInput
+      type="number"
+      [(ngModel)]="translateFormValues.multiplier"
+      name="multiplier"
+    />
+  </mat-form-field>
+</form>
 
 <ng-container *transloco="let t">
   <table>
     <tr *ngFor="let tr of rows; let rowIndex = index">
       <td *ngFor="let tr of cells; let cellIndex = index">
-        <ng-container [ngSwitch]="methodToUse">
+        <ng-container [ngSwitch]="translateFormValues.methodToUse">
           <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_DIRECTIVE">
-            {{ t('threat', { number: cellIndex * rowIndex }) }}
+            {{
+              t("threat", {
+                number: translateFormValues.multiplier * cellIndex * rowIndex
+              })
+            }}
           </ng-container>
 
           <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_PIPE">
-            <span>{{ 'threat' | transloco: { number: cellIndex * rowIndex } }}</span>
+            <span>{{
+              "threat"
+                | transloco
+                  : {
+                      number:
+                        translateFormValues.multiplier * cellIndex * rowIndex
+                    }
+            }}</span>
           </ng-container>
 
-          <ng-container *ngSwitchCase="TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE">
-            <span transloco="threat" [translocoParams]="{ number: cellIndex * rowIndex }"></span>
+          <ng-container
+            *ngSwitchCase="TranslationMethods.TRANSLOCO_ATTRIBUTE_DIRECTIVE"
+          >
+            <span
+              transloco="threat"
+              [translocoParams]="{
+                number: translateFormValues.multiplier * cellIndex * rowIndex
+              }"
+            ></span>
           </ng-container>
 
-          <ng-container *ngSwitchCase="TranslationMethods.MGMT_WRAPPER_DIRECTIVE">
-            <span [translateDirective]="{ key: 'threat', params: { number: cellIndex * rowIndex } }"></span>
+          <ng-container
+            *ngSwitchCase="TranslationMethods.MGMT_WRAPPER_DIRECTIVE"
+          >
+            <span
+              [translateDirective]="{
+                key: 'threat',
+                params: {
+                  number: translateFormValues.multiplier * cellIndex * rowIndex
+                }
+              }"
+            ></span>
           </ng-container>
         </ng-container>
       </td>
