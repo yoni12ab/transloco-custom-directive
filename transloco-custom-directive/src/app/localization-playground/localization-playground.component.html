@@ -67,6 +67,16 @@
   </mat-form-field>
 </form>
 
+<mat-card>Translation usage </mat-card>
+
+<pre>
+    <code>
+      {{usageExamples[translateFormValues.methodToUse]}}
+    </code>
+</pre>
+
+<mat-card>Translation example </mat-card>
+
 <ng-container *transloco="let t">
   <table>
     <tr *ngFor="let tr of rows; let rowIndex = index">
