@@ -39,8 +39,8 @@ export class LocalizationPlaygroundComponent implements OnInit {
       ? JSON.parse(lastFormValues)
       : {
           methodToUse: TranslationMethods.TRANSLOCO_DIRECTIVE,
-          numberOfRows: 200,
-          numberOfCells: 200,
+          numberOfRows: 50,
+          numberOfCells: 50,
           lang: 'en',
           multiplier: 1,
         };
